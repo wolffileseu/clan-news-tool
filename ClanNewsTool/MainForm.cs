@@ -27,6 +27,16 @@ namespace ClanNewsTool
             FormBorderStyle = FormBorderStyle.Sizable;
             MaximizeBox = true;
 
+            // App Icon aus eingebetteter Ressource
+            try
+            {
+                var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                using var stream = assembly.GetManifestResourceStream("ClanNewsTool.Resources.wolffiles.ico");
+                if (stream != null)
+                    this.Icon = new Icon(stream);
+            }
+            catch { }
+
             BuildLoginPanel();
             BuildMainPanel();
 
@@ -38,6 +48,40 @@ namespace ClanNewsTool
         private async Task CheckUpdateOnStartup()
         {
             await UpdateService.CheckAndUpdateAsync(silent: true);
+        }
+
+        // ─── SETTINGS ────────────────────────────────────────────────────────
+        private static string SettingsPath =>
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "ClanNewsTool",
+                "settings.json"
+            );
+
+        private static string LoadApiKey()
+        {
+            try
+            {
+                if (File.Exists(SettingsPath))
+                {
+                    var json = File.ReadAllText(SettingsPath);
+                    var doc = System.Text.Json.JsonDocument.Parse(json);
+                    return doc.RootElement.GetProperty("ApiKey").GetString() ?? "";
+                }
+            }
+            catch { }
+            return "";
+        }
+
+        private static void SaveApiKey(string key)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath)!);
+                var json = System.Text.Json.JsonSerializer.Serialize(new { ApiKey = key });
+                File.WriteAllText(SettingsPath, json);
+            }
+            catch { }
         }
 
         // ─── LOGIN PANEL ────────────────────────────────────────────────────
@@ -55,33 +99,35 @@ namespace ClanNewsTool
             outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
             outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80));
             outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
-            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 5));    // top spacer
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // logo
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // titel
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // subtitle
-            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 25));   // spacer mitte - größer!
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // api key label
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // textbox
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // button
-            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 70));   // status+version
+            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 5));
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 70));
 
             var logoPic = new PictureBox
             {
                 Dock = DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                Height = 120,           // größer
+                Height = 120,
                 Margin = new Padding(40, 0, 40, 8)
             };
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                // Logo aus eingebetteter Ressource laden
                 try
                 {
                     var assembly = System.Reflection.Assembly.GetExecutingAssembly();
                     var resourceName = "ClanNewsTool.Resources.wolffiles_logo.png";
                     using var stream = assembly.GetManifestResourceStream(resourceName);
                     if (stream != null)
-                        logoPic.Image = Image.FromStream(stream);
+                    {
+                        var img = Image.FromStream(stream);
+                        logoPic.Invoke(() => logoPic.Image = img);
+                    }
                 }
                 catch { }
             });
@@ -94,9 +140,10 @@ namespace ClanNewsTool
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
                 AutoSize = false,
-                Height = 60,            // größer
+                Height = 60,
                 Margin = new Padding(0, 4, 0, 2)
             };
+
             var lblSub = new Label
             {
                 Text = "Wolffiles.eu – Clan Portal",
@@ -105,9 +152,10 @@ namespace ClanNewsTool
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.TopCenter,
                 AutoSize = false,
-                Height = 35,            // größer
+                Height = 35,
                 Margin = new Padding(0, 25, 0, 4)
             };
+
             var lblKey = new Label
             {
                 Text = "API Key:",
@@ -115,7 +163,7 @@ namespace ClanNewsTool
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft,
                 AutoSize = false,
-                Height = 35,            // größer
+                Height = 35,
                 Margin = new Padding(2, 0, 0, 2)
             };
 
@@ -123,7 +171,7 @@ namespace ClanNewsTool
             _txtApiKey.Font = new Font("Segoe UI", 11);
             _txtApiKey.PasswordChar = '●';
             _txtApiKey.PlaceholderText = "API Key eingeben...";
-            _txtApiKey.Text = Properties.Settings.Default.ApiKey ?? "";
+            _txtApiKey.Text = LoadApiKey();
             _txtApiKey.Margin = new Padding(0, 0, 0, 8);
             _txtApiKey.MinimumSize = new Size(0, 34);
             _txtApiKey.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) BtnLogin_Click(s, e); };
@@ -209,8 +257,7 @@ namespace ClanNewsTool
                 }
                 else
                 {
-                    Properties.Settings.Default.ApiKey = key;
-                    Properties.Settings.Default.Save();
+                    SaveApiKey(key);
                     _lblClanInfo.Text = $"[{_clan.Tag}] {_clan.Name}";
                     _loginPanel.Visible = false;
                     _mainPanel.Visible = true;
@@ -272,8 +319,7 @@ namespace ClanNewsTool
             };
             btnLogout.FlatAppearance.BorderColor = Color.White;
             btnLogout.Click += (s, e) => {
-                Properties.Settings.Default.ApiKey = "";
-                Properties.Settings.Default.Save();
+                SaveApiKey("");
                 _mainPanel.Visible = false;
                 _loginPanel.Visible = true;
                 _loginPanel.BringToFront();
