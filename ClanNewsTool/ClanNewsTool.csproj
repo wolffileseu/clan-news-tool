@@ -1,32 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net10.0-windows</TargetFramework>
-		<Nullable>enable</Nullable>
-		<UseWindowsForms>true</UseWindowsForms>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<Version>1.0.1</Version>
-		<AssemblyVersion>1.0.1.0</AssemblyVersion>
-	</PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+	<ApplicationManifest>.github\workflows\release.yml</ApplicationManifest>
+  </PropertyGroup>
 
-	<ItemGroup>
-	  <None Remove="Resources\wolffiles_logo.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Resources\wolffiles_logo.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Update="Properties\Settings.Designer.cs">
-			<DesignTimeSharedInput>True</DesignTimeSharedInput>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Settings.settings</DependentUpon>
-		</Compile>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 	<ItemGroup>
 		<None Update="Properties\Settings.settings">
