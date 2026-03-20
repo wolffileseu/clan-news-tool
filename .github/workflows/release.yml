@@ -1,59 +1,36 @@
-﻿name: Build and Release v2
-
+name: Build and Release v3
 on:
   push:
     tags:
       - 'v*'
-
 jobs:
   build:
     runs-on: windows-latest
     permissions:
       contents: write
       id-token: write
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-
       - name: Publish
         run: dotnet publish ClanNewsTool/ClanNewsTool.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
-
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3
-
       - name: Sign with Cosign
-        run: cosign sign-blob ./publish/ClanNewsTool.exe --yes --output-signature ./publish/ClanNewsTool.exe.sig --output-certificate ./publish/ClanNewsTool.exe.pem
         env:
           COSIGN_EXPERIMENTAL: "1"
-
+        run: cosign sign-blob ./publish/ClanNewsTool.exe --yes --output-signature ./publish/ClanNewsTool.exe.sig --output-certificate ./publish/ClanNewsTool.exe.pem
       - name: Create Release
         uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          name: ClanNewsTool ${{ github.ref_name }}
+          body: ClanNewsTool ${{ github.ref_name }}
           files: |
             ./publish/ClanNewsTool.exe
             ./publish/ClanNewsTool.exe.sig
             ./publish/ClanNewsTool.exe.pem
-          name: "ClanNewsTool ${{ github.ref_name }}"
-          body: |
-            ## ClanNewsTool ${{ github.ref_name }}
-
-            ### Download
-            - `ClanNewsTool.exe` – Hauptprogramm
-            - `ClanNewsTool.exe.sig` – Cosign Signatur
-            - `ClanNewsTool.exe.pem` – Cosign Zertifikat
-
-            ### Signatur verifizieren
-```bash
-            cosign verify-blob ClanNewsTool.exe \
-              --signature ClanNewsTool.exe.sig \
-              --certificate ClanNewsTool.exe.pem \
-              --certificate-identity-regexp="https://github.com/wolffileseu/clan-news-tool" \
-              --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
-```
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
