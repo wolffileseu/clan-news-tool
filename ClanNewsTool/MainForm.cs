@@ -27,11 +27,10 @@ namespace ClanNewsTool
             FormBorderStyle = FormBorderStyle.Sizable;
             MaximizeBox = true;
 
-            // App Icon aus eingebetteter Ressource
             try
             {
                 var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                using var stream = assembly.GetManifestResourceStream("ClanNewsTool.Resources.wolffiles.ico");
+                using var stream = assembly.GetManifestResourceStream("ClanNewsTool.Resources.wolffiles_icon.ico");
                 if (stream != null)
                     this.Icon = new Icon(stream);
             }
@@ -382,7 +381,7 @@ namespace ClanNewsTool
                         Title = fields[0].Text.Trim(),
                         Excerpt = fields[1].Text.Trim(),
                         Content = fields[2].Text.Trim()
-                    }));
+                    }), () => { foreach (var f in fields) f.Clear(); });
                 };
             }));
             return tab;
@@ -413,7 +412,12 @@ namespace ClanNewsTool
                     Content = txtContent.Text.Trim(),
                     EventDate = dtpDate.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                     EventLocation = txtLocation.Text.Trim()
-                }));
+                }), () => {
+                    txtTitle.Clear();
+                    txtLocation.Clear();
+                    txtContent.Clear();
+                    dtpDate.Value = DateTime.Now;
+                });
             };
 
             tab.Controls.Add(layout);
@@ -455,7 +459,14 @@ namespace ClanNewsTool
                     MatchResult = txtResult.Text.Trim(),
                     MatchMap = txtMap.Text.Trim(),
                     EventDate = dtpDate.Value.ToString("yyyy-MM-dd")
-                }));
+                }), () => {
+                    txtTitle.Clear();
+                    txtOpponent.Clear();
+                    txtResult.Clear();
+                    txtMap.Clear();
+                    txtContent.Clear();
+                    dtpDate.Value = DateTime.Now;
+                });
             };
 
             tab.Controls.Add(layout);
@@ -480,7 +491,7 @@ namespace ClanNewsTool
                         Title = fields[0].Text.Trim(),
                         Excerpt = fields[1].Text.Trim(),
                         Content = fields[2].Text.Trim()
-                    }));
+                    }), () => { foreach (var f in fields) f.Clear(); });
                 };
             }));
             return tab;
@@ -667,7 +678,7 @@ namespace ClanNewsTool
             return true;
         }
 
-        private async Task PostAsync<T>(Button btn, Label status, Func<Task<T?>> action) where T : ApiResponse
+        private async Task PostAsync<T>(Button btn, Label status, Func<Task<T?>> action, Action? onSuccess = null) where T : ApiResponse
         {
             btn.Enabled = false;
             status.ForeColor = Color.Gray;
@@ -679,6 +690,7 @@ namespace ClanNewsTool
                 {
                     status.ForeColor = Color.Green;
                     status.Text = "✅ Erfolgreich – wartet auf Freischaltung!";
+                    onSuccess?.Invoke();
                 }
                 else
                 {

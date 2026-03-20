@@ -8,9 +8,22 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<Version>1.0.2</Version>
-		<AssemblyVersion>1.0.2.0</AssemblyVersion>
+		<ApplicationIcon>Resources\wolffiles_icon.ico</ApplicationIcon>
+		<Company>Wolffiles.eu</Company>
+		<Product>Clan News Tool</Product>
+		<Description>Clan News Tool für Wolffiles.eu – ET/RtCW Community</Description>
+		<Copyright>© 2026 Wolffiles.eu</Copyright>
+		<AssemblyTitle>Clan News Tool</AssemblyTitle>
+		<NeutralLanguage>de-DE</NeutralLanguage>
+		<Version>1.0.3</Version>
+		<AssemblyVersion>1.0.3.0</AssemblyVersion>
+		<FileVersion>1.0.3.0</FileVersion>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\wolffiles_logo.png" />
+		<EmbeddedResource Include="Resources\wolffiles_icon.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Update="Properties\Settings.Designer.cs">
@@ -25,10 +38,6 @@
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Include="Resources\wolffiles_logo.png" />
 	</ItemGroup>
 
 </Project>

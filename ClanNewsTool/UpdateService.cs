@@ -102,8 +102,8 @@ namespace ClanNewsTool
     {
         public ProgressForm(string message)
         {
-            Text = "ClanNewsTool";
-            Size = new Size(350, 100);
+            Text = "Clan News Tool";
+            Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             ControlBox = false;
