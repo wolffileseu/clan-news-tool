@@ -1,6 +1,6 @@
 # 🐺 ClanNewsTool – Wolffiles.eu
 
-[![Build and Release](https://github.com/wolffileseu/clan-news-tool/actions/workflows/release.yml/badge.svg)](https://github.com/wolffileseu/clan-news-tool/actions/workflows/release.yml)
+[![Build and Release](https://github.com/wolffileseu/clan-news-tool/actions/workflows/release.yml/badge.svg?event=push)](https://github.com/wolffileseu/clan-news-tool/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/wolffileseu/clan-news-tool/releases/latest)
 [![Download](https://img.shields.io/github/v/release/wolffileseu/clan-news-tool?label=Download&color=orange)](https://github.com/wolffileseu/clan-news-tool/releases/latest)
