@@ -20,9 +20,9 @@ namespace ClanNewsTool
         {
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Font;
-            Text = "ClanNewsTool – Wolffiles.eu";
-            MinimumSize = new Size(600, 550);
-            Size = new Size(750, 650);
+            Text = "Clan News Tool – Wolffiles.eu";
+            MinimumSize = new Size(1200, 1000);
+            Size = new Size(1200, 800);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.Sizable;
             MaximizeBox = true;
@@ -49,33 +49,54 @@ namespace ClanNewsTool
             var outer = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                RowCount = 8,
+                RowCount = 9,
                 ColumnCount = 3,
             };
-            outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
-            outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70));
-            outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
-            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 10));
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 75));
+            outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+            outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80));
+            outer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
+            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 5));    // top spacer
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // logo
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // titel
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // subtitle
+            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 25));   // spacer mitte - größer!
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // api key label
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // textbox
+            outer.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // button
+            outer.RowStyles.Add(new RowStyle(SizeType.Percent, 70));   // status+version
 
-            var logo = new Label
+            var logoPic = new PictureBox
             {
-                Text = "🐺 ClanNewsTool",
-                Font = new Font("Segoe UI", 22, FontStyle.Bold),
+                Dock = DockStyle.Fill,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Height = 120,           // größer
+                Margin = new Padding(40, 0, 40, 8)
+            };
+            Task.Run(async () =>
+            {
+                // Logo aus eingebetteter Ressource laden
+                try
+                {
+                    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                    var resourceName = "ClanNewsTool.Resources.wolffiles_logo.png";
+                    using var stream = assembly.GetManifestResourceStream(resourceName);
+                    if (stream != null)
+                        logoPic.Image = Image.FromStream(stream);
+                }
+                catch { }
+            });
+
+            var lblTitle = new Label
+            {
+                Text = "Clan News Tool",
+                Font = new Font("Segoe UI", 18, FontStyle.Bold),
                 ForeColor = Color.FromArgb(220, 80, 40),
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
                 AutoSize = false,
-                Height = 60,
-                Margin = new Padding(0, 0, 0, 5)
+                Height = 60,            // größer
+                Margin = new Padding(0, 4, 0, 2)
             };
-
             var lblSub = new Label
             {
                 Text = "Wolffiles.eu – Clan Portal",
@@ -84,9 +105,9 @@ namespace ClanNewsTool
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.TopCenter,
                 AutoSize = false,
-                Height = 28
+                Height = 35,            // größer
+                Margin = new Padding(0, 25, 0, 4)
             };
-
             var lblKey = new Label
             {
                 Text = "API Key:",
@@ -94,8 +115,8 @@ namespace ClanNewsTool
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft,
                 AutoSize = false,
-                Height = 32,
-                Padding = new Padding(2, 0, 0, 2)
+                Height = 35,            // größer
+                Margin = new Padding(2, 0, 0, 2)
             };
 
             _txtApiKey.Dock = DockStyle.Fill;
@@ -110,7 +131,7 @@ namespace ClanNewsTool
             var btnWrapper = new Panel
             {
                 Dock = DockStyle.Fill,
-                Height = 58,
+                Height = 70,
                 Padding = new Padding(0, 8, 0, 8)
             };
             _btnLogin.Dock = DockStyle.Fill;
@@ -142,7 +163,7 @@ namespace ClanNewsTool
             {
                 Text = $"Version {UpdateService.CurrentVersion}",
                 Font = new Font("Segoe UI", 8),
-                ForeColor = Color.LightGray,
+                ForeColor = Color.Gray,
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomCenter
             };
@@ -150,13 +171,14 @@ namespace ClanNewsTool
             bottomPanel.Controls.Add(_lblLoginStatus, 0, 0);
             bottomPanel.Controls.Add(lblVersion, 0, 1);
 
-            outer.Controls.Add(logo, 1, 1);
-            outer.Controls.Add(lblSub, 1, 2);
-            outer.Controls.Add(new Label(), 1, 3);
-            outer.Controls.Add(lblKey, 1, 4);
-            outer.Controls.Add(_txtApiKey, 1, 5);
-            outer.Controls.Add(btnWrapper, 1, 6);
-            outer.Controls.Add(bottomPanel, 1, 7);
+            outer.Controls.Add(logoPic, 1, 1);
+            outer.Controls.Add(lblTitle, 1, 2);
+            outer.Controls.Add(lblSub, 1, 3);
+            outer.Controls.Add(new Label(), 1, 4);
+            outer.Controls.Add(lblKey, 1, 5);
+            outer.Controls.Add(_txtApiKey, 1, 6);
+            outer.Controls.Add(btnWrapper, 1, 7);
+            outer.Controls.Add(bottomPanel, 1, 8);
 
             _loginPanel.Controls.Add(outer);
         }
@@ -223,7 +245,6 @@ namespace ClanNewsTool
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
-            // Header als FlowLayoutPanel – kein Clipping mehr
             var header = new Panel
             {
                 Dock = DockStyle.Fill,
@@ -272,7 +293,6 @@ namespace ClanNewsTool
             btnUpdate.Click += async (s, e) =>
                 await UpdateService.CheckAndUpdateAsync(silent: false);
 
-            // Position der Buttons rechts ausrichten beim Resize
             header.Resize += (s, e) =>
             {
                 btnLogout.Location = new Point(header.Width - btnLogout.Width - 12, 8);
@@ -332,7 +352,6 @@ namespace ClanNewsTool
             var txtLocation = AddRow(layout, "Ort / Server (optional)", false);
             var txtContent = AddRow(layout, "Beschreibung *", true);
 
-            // Spacer
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             layout.RowCount++;
             layout.Controls.Add(new Panel { Dock = DockStyle.Fill }, 0, layout.RowCount - 1);
@@ -449,7 +468,6 @@ namespace ClanNewsTool
                 var (label, multiline) = fields[i];
                 if (multiline)
                 {
-                    // Multiline bekommt Percent Zeile
                     layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
                     layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
                     layout.RowCount += 2;
@@ -552,10 +570,11 @@ namespace ClanNewsTool
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
                 ForeColor = Color.FromArgb(60, 60, 60),
                 Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.BottomLeft,
+                TextAlign = ContentAlignment.TopLeft,
                 AutoSize = false,
-                MinimumSize = new Size(0, 26),
-                Margin = new Padding(0, 10, 0, 2)
+                MinimumSize = new Size(0, 32),
+                Margin = new Padding(0, 10, 0, 8),
+                Padding = new Padding(0, 0, 4, 0)
             };
         }
 
