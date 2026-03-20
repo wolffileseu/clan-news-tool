@@ -124,7 +124,11 @@ namespace ClanNewsTool
                     using var stream = assembly.GetManifestResourceStream(resourceName);
                     if (stream != null)
                     {
-                        var img = Image.FromStream(stream);
+                        // Stream in MemoryStream kopieren damit er nicht disposed wird
+                        var ms = new MemoryStream();
+                        stream.CopyTo(ms);
+                        ms.Position = 0;
+                        var img = Image.FromStream(ms);
                         logoPic.Invoke(() => logoPic.Image = img);
                     }
                 }
