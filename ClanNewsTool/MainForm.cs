@@ -20,7 +20,7 @@ namespace ClanNewsTool
         {
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Font;
-            Text = "Clan News Tool – Wolffiles.eu";
+            Text = Localization.T("app_title");
             MinimumSize = new Size(1200, 1000);
             Size = new Size(1200, 800);
             StartPosition = FormStartPosition.CenterScreen;
@@ -145,7 +145,7 @@ namespace ClanNewsTool
 
             var lblSub = new Label
             {
-                Text = "Wolffiles.eu – Clan Portal",
+                Text = Localization.T("subtitle"),
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Gray,
                 Dock = DockStyle.Fill,
@@ -157,7 +157,7 @@ namespace ClanNewsTool
 
             var lblKey = new Label
             {
-                Text = "API Key:",
+                Text = Localization.T("api_key"),
                 Font = new Font("Segoe UI", 10),
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.BottomLeft,
@@ -169,7 +169,7 @@ namespace ClanNewsTool
             _txtApiKey.Dock = DockStyle.Fill;
             _txtApiKey.Font = new Font("Segoe UI", 11);
             _txtApiKey.PasswordChar = '●';
-            _txtApiKey.PlaceholderText = "API Key eingeben...";
+            _txtApiKey.PlaceholderText = Localization.T("api_key_hint");
             _txtApiKey.Text = LoadApiKey();
             _txtApiKey.Margin = new Padding(0, 0, 0, 8);
             _txtApiKey.MinimumSize = new Size(0, 34);
@@ -187,7 +187,7 @@ namespace ClanNewsTool
             _btnLogin.ForeColor = Color.White;
             _btnLogin.FlatStyle = FlatStyle.Flat;
             _btnLogin.FlatAppearance.BorderSize = 0;
-            _btnLogin.Text = "Einloggen";
+            _btnLogin.Text = Localization.T("login");
             _btnLogin.Cursor = Cursors.Hand;
             _btnLogin.Click += BtnLogin_Click;
             btnWrapper.Controls.Add(_btnLogin);
@@ -235,13 +235,13 @@ namespace ClanNewsTool
             var key = _txtApiKey.Text.Trim();
             if (string.IsNullOrEmpty(key))
             {
-                _lblLoginStatus.Text = "Bitte API Key eingeben!";
+                _lblLoginStatus.Text = Localization.T("enter_key");
                 return;
             }
 
             _btnLogin.Enabled = false;
             _lblLoginStatus.ForeColor = Color.Gray;
-            _lblLoginStatus.Text = "Verbinde...";
+            _lblLoginStatus.Text = Localization.T("connecting");
 
             try
             {
@@ -251,7 +251,7 @@ namespace ClanNewsTool
                 if (_clan == null)
                 {
                     _lblLoginStatus.ForeColor = Color.Red;
-                    _lblLoginStatus.Text = "Ungültiger API Key!";
+                    _lblLoginStatus.Text = Localization.T("invalid_key");
                     _api = null;
                 }
                 else
@@ -266,7 +266,7 @@ namespace ClanNewsTool
             catch
             {
                 _lblLoginStatus.ForeColor = Color.Red;
-                _lblLoginStatus.Text = "Verbindung fehlgeschlagen!";
+                _lblLoginStatus.Text = Localization.T("connection_error");
                 _api = null;
             }
             finally
@@ -308,7 +308,7 @@ namespace ClanNewsTool
 
             var btnLogout = new Button
             {
-                Text = "Ausloggen",
+                Text = Localization.T("logout"),
                 AutoSize = true,
                 FlatStyle = FlatStyle.Flat,
                 ForeColor = Color.White,
@@ -326,7 +326,7 @@ namespace ClanNewsTool
 
             var btnUpdate = new Button
             {
-                Text = "🔄 Update",
+                Text = Localization.T("update"),
                 AutoSize = true,
                 FlatStyle = FlatStyle.Flat,
                 ForeColor = Color.White,
@@ -365,13 +365,13 @@ namespace ClanNewsTool
         // ─── TABS ────────────────────────────────────────────────────────────
         private TabPage BuildNewsTab()
         {
-            var tab = new TabPage("📰 News") { Padding = new Padding(0) };
+            var tab = new TabPage(Localization.T("tab_news")) { Padding = new Padding(0) };
             tab.Controls.Add(BuildFormLayout(new[]
             {
-                ("Titel *", false),
-                ("Kurzbeschreibung (optional)", false),
-                ("Inhalt *", true),
-            }, "📰 News posten", (fields, btn, lbl) =>
+                (Localization.T("title"),        false),
+                (Localization.T("excerpt"),       false),
+                (Localization.T("content_news"),  true),
+            }, Localization.T("btn_news"), (fields, btn, lbl) =>
             {
                 btn.Click += async (s, e) =>
                 {
@@ -389,19 +389,19 @@ namespace ClanNewsTool
 
         private TabPage BuildEventTab()
         {
-            var tab = new TabPage("📅 Event") { Padding = new Padding(0) };
+            var tab = new TabPage(Localization.T("tab_event")) { Padding = new Padding(0) };
             var layout = MakeTabLayout();
 
-            var txtTitle = AddRow(layout, "Titel *", false);
-            var dtpDate = AddDateRow(layout, "Datum & Uhrzeit *", true);
-            var txtLocation = AddRow(layout, "Ort / Server (optional)", false);
-            var txtContent = AddRow(layout, "Beschreibung *", true);
+            var txtTitle = AddRow(layout, Localization.T("title"), false);
+            var dtpDate = AddDateRow(layout, Localization.T("event_date"), true);
+            var txtLocation = AddRow(layout, Localization.T("event_location"), false);
+            var txtContent = AddRow(layout, Localization.T("content_event"), true);
 
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             layout.RowCount++;
             layout.Controls.Add(new Panel { Dock = DockStyle.Fill }, 0, layout.RowCount - 1);
 
-            var (btnPost, lblStatus) = AddButtonRow(layout, "📅 Event posten");
+            var (btnPost, lblStatus) = AddButtonRow(layout, Localization.T("btn_event"));
 
             btnPost.Click += async (s, e) =>
             {
@@ -426,21 +426,21 @@ namespace ClanNewsTool
 
         private TabPage BuildMatchTab()
         {
-            var tab = new TabPage("⚔️ Match") { Padding = new Padding(0) };
+            var tab = new TabPage(Localization.T("tab_match")) { Padding = new Padding(0) };
             var layout = MakeTabLayout();
 
-            var txtTitle = AddRow(layout, "Titel *", false);
-            var txtOpponent = AddRow(layout, "Gegner-Clan *", false);
-            var txtResult = AddRow(layout, "Ergebnis (z.B. 2:1)", false);
-            var txtMap = AddRow(layout, "Map (optional)", false);
-            var dtpDate = AddDateRow(layout, "Match-Datum", false);
-            var txtContent = AddRow(layout, "Match-Bericht *", true);
+            var txtTitle = AddRow(layout, Localization.T("title"), false);
+            var txtOpponent = AddRow(layout, Localization.T("opponent"), false);
+            var txtResult = AddRow(layout, Localization.T("result"), false);
+            var txtMap = AddRow(layout, Localization.T("map"), false);
+            var dtpDate = AddDateRow(layout, Localization.T("match_date"), false);
+            var txtContent = AddRow(layout, Localization.T("content_match"), true);
 
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             layout.RowCount++;
             layout.Controls.Add(new Panel { Dock = DockStyle.Fill }, 0, layout.RowCount - 1);
 
-            var (btnPost, lblStatus) = AddButtonRow(layout, "⚔️ Match posten");
+            var (btnPost, lblStatus) = AddButtonRow(layout, Localization.T("btn_match"));
 
             btnPost.Click += async (s, e) =>
             {
@@ -448,7 +448,7 @@ namespace ClanNewsTool
                 if (string.IsNullOrWhiteSpace(txtOpponent.Text))
                 {
                     lblStatus.ForeColor = Color.Red;
-                    lblStatus.Text = "Bitte Gegner-Clan eingeben!";
+                    lblStatus.Text = Localization.T("enter_opponent");
                     return;
                 }
                 await PostAsync(btnPost, lblStatus, () => _api!.PostMatchAsync(new MatchPost
@@ -475,13 +475,13 @@ namespace ClanNewsTool
 
         private TabPage BuildRecruitmentTab()
         {
-            var tab = new TabPage("🎮 Rekrutierung") { Padding = new Padding(0) };
+            var tab = new TabPage(Localization.T("tab_recruit")) { Padding = new Padding(0) };
             tab.Controls.Add(BuildFormLayout(new[]
             {
-                ("Titel *", false),
-                ("Kurzbeschreibung (optional)", false),
-                ("Anforderungen & Details *", true),
-            }, "🎮 Rekrutierung posten", (fields, btn, lbl) =>
+                (Localization.T("title"),           false),
+                (Localization.T("excerpt"),          false),
+                (Localization.T("content_recruit"),  true),
+            }, Localization.T("btn_recruit"), (fields, btn, lbl) =>
             {
                 btn.Click += async (s, e) =>
                 {
@@ -672,7 +672,7 @@ namespace ClanNewsTool
             if (string.IsNullOrWhiteSpace(title.Text) || string.IsNullOrWhiteSpace(content.Text))
             {
                 status.ForeColor = Color.Red;
-                status.Text = "Bitte alle Pflichtfelder (*) ausfüllen!";
+                status.Text = Localization.T("fill_required");
                 return false;
             }
             return true;
@@ -682,26 +682,26 @@ namespace ClanNewsTool
         {
             btn.Enabled = false;
             status.ForeColor = Color.Gray;
-            status.Text = "Wird gesendet...";
+            status.Text = "⏳ ...";
             try
             {
                 var result = await action();
                 if (result?.Success == true)
                 {
                     status.ForeColor = Color.Green;
-                    status.Text = "✅ Erfolgreich – wartet auf Freischaltung!";
+                    status.Text = Localization.T("success");
                     onSuccess?.Invoke();
                 }
                 else
                 {
                     status.ForeColor = Color.Red;
-                    status.Text = $"❌ Fehler: {result?.Error ?? "Unbekannter Fehler"}";
+                    status.Text = Localization.T("error_prefix") + (result?.Error ?? Localization.T("unknown_error"));
                 }
             }
             catch (Exception ex)
             {
                 status.ForeColor = Color.Red;
-                status.Text = $"❌ Verbindungsfehler: {ex.Message}";
+                status.Text = Localization.T("conn_error") + ex.Message;
             }
             finally
             {

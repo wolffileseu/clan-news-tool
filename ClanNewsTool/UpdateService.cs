@@ -19,21 +19,26 @@ namespace ClanNewsTool
                 if (!IsNewerVersion(versionInfo.Version, CurrentVersion))
                 {
                     if (!silent)
-                        MessageBox.Show("Du hast bereits die neueste Version!",
-                            "Kein Update", MessageBoxButtons.OK,
+                        MessageBox.Show(
+                            Localization.T("no_update"),
+                            Localization.T("no_update_title"),
+                            MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
                     return;
                 }
 
-                var msg = $"Neue Version verfügbar: {versionInfo.Version}\n" +
-                          $"Aktuelle Version: {CurrentVersion}\n\n" +
-                          $"Änderungen:\n{versionInfo.Changelog}\n\n" +
-                          $"Jetzt aktualisieren?";
+                var msg = string.Format(Localization.T("update_msg"),
+                    versionInfo.Version,
+                    CurrentVersion,
+                    versionInfo.Changelog);
 
                 var result = versionInfo.ForceUpdate
                     ? DialogResult.Yes
-                    : MessageBox.Show(msg, "Update verfügbar",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    : MessageBox.Show(
+                        msg,
+                        Localization.T("update_available"),
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information);
 
                 if (result == DialogResult.Yes && versionInfo.DownloadUrl != null)
                 {
@@ -42,7 +47,7 @@ namespace ClanNewsTool
             }
             catch
             {
-                // Kein Update verfügbar oder kein Internet – still ignorieren
+                // Kein Update oder kein Internet – still ignorieren
             }
         }
 
@@ -57,7 +62,7 @@ namespace ClanNewsTool
         {
             var tempPath = Path.Combine(Path.GetTempPath(), "ClanNewsTool_update.exe");
 
-            using var progress = new ProgressForm("Update wird heruntergeladen...");
+            using var progress = new ProgressForm(Localization.T("downloading"));
             progress.Show();
             Application.DoEvents();
 
@@ -68,7 +73,6 @@ namespace ClanNewsTool
                 await File.WriteAllBytesAsync(tempPath, bytes);
                 progress.Close();
 
-                // Updater-Script erstellen und ausführen
                 var currentExe = Process.GetCurrentProcess().MainModule?.FileName ?? "";
                 var scriptPath = Path.Combine(Path.GetTempPath(), "update.bat");
                 await File.WriteAllTextAsync(scriptPath,
@@ -92,8 +96,11 @@ namespace ClanNewsTool
             catch (Exception ex)
             {
                 progress.Close();
-                MessageBox.Show($"Update fehlgeschlagen: {ex.Message}",
-                    "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    Localization.T("update_failed") + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
     }

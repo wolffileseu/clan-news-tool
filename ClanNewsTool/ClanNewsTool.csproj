@@ -14,10 +14,10 @@
 		<Description>Clan News Tool für Wolffiles.eu – ET/RtCW Community</Description>
 		<Copyright>© 2026 Wolffiles.eu</Copyright>
 		<AssemblyTitle>Clan News Tool</AssemblyTitle>
-		<NeutralLanguage>de-DE</NeutralLanguage>
-		<Version>1.0.3</Version>
-		<AssemblyVersion>1.0.3.0</AssemblyVersion>
-		<FileVersion>1.0.3.0</FileVersion>
+		<NeutralLanguage>en-EN</NeutralLanguage>
+		<Version>1.1.0</Version>
+		<AssemblyVersion>1.1.0.0</AssemblyVersion>
+		<FileVersion>1.1.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

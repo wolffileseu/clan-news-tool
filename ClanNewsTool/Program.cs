@@ -7,6 +7,7 @@ namespace ClanNewsTool
         {
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             ApplicationConfiguration.Initialize();
+            Localization.Initialize();
             Application.Run(new MainForm());
         }
     }
