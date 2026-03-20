@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
 	<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
-	<ApplicationManifest>app.manifest</ApplicationManifest>
+	<ApplicationManifest>.github\workflows\release.yml</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".github\workflows\release.yml" />
   </ItemGroup>
 
 </Project>

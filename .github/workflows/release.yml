@@ -1,0 +1,29 @@
+﻿name: Build & Release
+
+on:
+push:
+tags:
+- 'v*'
+
+jobs:
+build:
+runs-on: windows-latest
+steps:
+- uses: actions/checkout@v4
+
+- name: Setup .NET
+uses: actions/setup-dotnet@v4
+with:
+dotnet-version: '10.0.x'
+
+- name: Publish
+run: dotnet publish ClanNewsTool/ClanNewsTool.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
+
+- name: Create Release
+uses: softprops/action-gh-release@v2
+with:
+files: ./publish/ClanNewsTool.exe
+name: "ClanNewsTool ${{ github.ref_name }}"
+body: "Neue Version ${{ github.ref_name }}"
+env:
+GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
