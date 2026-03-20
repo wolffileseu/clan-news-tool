@@ -55,7 +55,7 @@ The tool is fully DPI-aware and scales correctly on all screen resolutions and s
 
 ## 🚀 How to get started
 
-1. **Request an API Key** – Contact us on [Discord]([https://discord.gg/wolffiles](https://discord.com/invite/wzkRyWWuxP)) or via the [Wolffiles.eu contact form](https://wolffiles.eu/contact)
+1. **Request an API Key** – Contact us on [Discord]([https://discord.gg/wolffiles](https://discord.com/invite/wzkRyWWuxP) or via the [Wolffiles.eu contact form](https://wolffiles.eu/contact)
 2. **Download the tool** – [Latest Release](https://github.com/wolffileseu/clan-news-tool/releases/latest)
 3. **Run `ClanNewsTool.exe`** – Enter your API key and log in
 4. **Post your content** – Select a tab, fill in the form and submit
@@ -131,7 +131,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 ## 🌐 Links
 
 - 🌍 [Wolffiles.eu](https://wolffiles.eu)
-- 💬 [Discord]([https://discord.gg/wolffiles](https://discord.com/invite/wzkRyWWuxP))
+- 💬 [Discord]([https://discord.gg/wolffiles](https://discord.com/invite/wzkRyWWuxP)
 - 📰 [News](https://wolffiles.eu/news)
 - 🐙 [GitHub Organization](https://github.com/wolffileseu)
 
