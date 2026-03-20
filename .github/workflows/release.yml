@@ -1,28 +1,27 @@
-name: Build and Release v3
+name: Build and Release
+
 on:
   push:
     tags:
       - 'v*'
+
 jobs:
   build:
     runs-on: windows-latest
     permissions:
       contents: write
-      id-token: write
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+
       - name: Publish
         run: dotnet publish ClanNewsTool/ClanNewsTool.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
-      - name: Sign with Cosign
-        env:
-          COSIGN_EXPERIMENTAL: "1"
-        run: cosign sign-blob ./publish/ClanNewsTool.exe --yes --output-signature ./publish/ClanNewsTool.exe.sig --output-certificate ./publish/ClanNewsTool.exe.pem
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         env:
@@ -30,7 +29,4 @@ jobs:
         with:
           name: ClanNewsTool ${{ github.ref_name }}
           body: ClanNewsTool ${{ github.ref_name }}
-          files: |
-            ./publish/ClanNewsTool.exe
-            ./publish/ClanNewsTool.exe.sig
-            ./publish/ClanNewsTool.exe.pem
+          files: ./publish/ClanNewsTool.exe
